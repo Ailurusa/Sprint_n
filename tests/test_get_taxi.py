@@ -57,10 +57,18 @@ class TestGetTaxi:
     def test_extra_info_panel_include_phone_payment_comment_and_extra_wishes_fields(self,
                                                                                     driver_open_choose_taxi_panel):
         page = GetTaxiPage(driver_open_choose_taxi_panel)
-        assert (
-                page.get_text_from_extra_info_phone_field() == EXTRA_INFO_PHONE_FIELD_TEXT
-                and page.get_text_from_extra_info_payment_field() == EXTRA_INFO_PAYMENT_INFO_TEXT
-                and page.get_text_from_extra_info_comment_field() == EXTRA_INFO_COMMENT_FIELD_TEXT
-                and page.get_text_from_extra_info_extra_wishes_field() == EXTRA_INFO_EXTRA_WISHES_TEXT
-                and page.get_text_from_extra_info_get_taxi_button() == EXTRA_INFO_GET_TAXI_BUTTON_TEXT
+        actual = (
+            page.get_text_from_extra_info_phone_field(),
+            page.get_text_from_extra_info_payment_field(),
+            page.get_text_from_extra_info_comment_field(),
+            page.get_text_from_extra_info_extra_wishes_field(),
+            page.get_text_from_extra_info_get_taxi_button(),
         )
+        expected = (
+            EXTRA_INFO_PHONE_FIELD_TEXT,
+            EXTRA_INFO_PAYMENT_INFO_TEXT,
+            EXTRA_INFO_COMMENT_FIELD_TEXT,
+            EXTRA_INFO_EXTRA_WISHES_TEXT,
+            EXTRA_INFO_GET_TAXI_BUTTON_TEXT,
+        )
+        assert actual == expected

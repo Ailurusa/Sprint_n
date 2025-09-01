@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.support.ui import WebDriverWait
 
 from locators.taxi_search_locators import TaxiSearchLocators as L
 from pages.base_page import BasePage
@@ -32,17 +31,7 @@ class SearchTaxiPage(BasePage):
 
     @allure.step("Дождаться окончания таймера")
     def wait_timer_finish(self, timeout: int = 60):
-        def current_timer_text():
-            try:
-                return self.extract_text(L.HEADER_TIMER).strip()
-            except Exception:
-                return None
-
-        WebDriverWait(self.browser, timeout).until(
-            lambda d: (t := current_timer_text()) in {"00:01", "00:00", None}
-        )
-
-        if current_timer_text() == "00:01":
-            WebDriverWait(self.browser, 30).until(
-                lambda d: (t := current_timer_text()) in {"00:00", None}
-            )
+        self.wait_text_in(L.HEADER_TIMER, {"00:01", "00:00"}, timeout=timeout, allow_missing=True)
+        current = self._safe_text(L.HEADER_TIMER)
+        if current == "00:01":
+            self.wait_text_in(L.HEADER_TIMER, {"00:00"}, timeout=30, allow_missing=True)

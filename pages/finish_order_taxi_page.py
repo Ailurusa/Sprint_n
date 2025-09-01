@@ -60,3 +60,7 @@ class FinishOrderTaxiPage(BasePage):
     def get_text_details_order_price(self) -> str:
         self.wait_for_visibility(L.FARE_LABEL)
         return self.extract_text(L.FARE_LABEL).strip()
+
+    @allure.step("Дождаться открытия панели завершения заказа")
+    def wait_opened(self):
+        self.wait_for_visibility(L.DRIVER_AVATAR)

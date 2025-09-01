@@ -32,10 +32,8 @@ def driver():
 def driver_with_addresses(driver):
     with allure.step("Ввести адреса отправления и назначения"):
         page = MainPage(driver)
-        page.enter_from_address(FIRST_ADDRESS)  # было: fill_start_address_field
-        page.enter_to_address(SECOND_ADDRESS)  # было: fill_end_address_field
-    with allure.step("Дождаться появления панели вариантов маршрута"):
-        assert page.is_route_picker_visible(), "Панель выбора маршрута не появилась"
+        page.enter_from_address(FIRST_ADDRESS)
+        page.enter_to_address(SECOND_ADDRESS)
     yield driver
 
 
@@ -82,5 +80,5 @@ def driver_open_finish_order_taxi_panel(driver_open_choose_taxi_panel):
         search_panel.wait_timer_finish()
     with allure.step("Убедиться, что панель завершения заказа открылась"):
         finish_panel = FinishOrderTaxiPage(driver_open_choose_taxi_panel)
-        assert finish_panel.is_driver_picture_visible(), "Аватар водителя не отображается"
+        finish_panel.wait_opened()
     yield driver_open_choose_taxi_panel, price

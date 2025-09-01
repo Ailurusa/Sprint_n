@@ -1,4 +1,5 @@
 import allure
+from selenium.common import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -60,3 +61,21 @@ class BasePage:
     @allure.step("Скроллим до конца")
     def move_to_down_in_container(self, container_locator):
         self.browser.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", container_locator)
+
+    def _safe_text(self, locator):
+        try:
+            return self.extract_text(locator).strip()
+        except (StaleElementReferenceException, NoSuchElementException):
+            return None
+
+    @allure.step("Ждем, пока текст элемента станет одним из ожидаемых значений")
+    def wait_text_in(self, locator, expected_values, timeout=30, allow_missing=False):
+        expected = set(expected_values)
+
+        def cond(_):
+            t = self._safe_text(locator)
+            if t is None:
+                return allow_missing
+            return t in expected
+
+        WebDriverWait(self.browser, timeout).until(cond)
